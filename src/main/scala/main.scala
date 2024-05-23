@@ -1,9 +1,44 @@
 package com.spark.main
 
-object main {
+//Local Imports
+import libs.couchdb
+import libs.files
+import const.constants
+import envDBs.environment
+//Libs Imports
+import sttp.client4.Response
+
+object main extends environment {
+
+    val objCouchDB : couchdb = new couchdb();
+    val objfiles : files = new files();
+    val executionMap : Map[String, String]= constants.dumpExecution;
+
     def main(args: Array[String]): Unit = {
-    // prints: 200
-    // val json = ujson.read(response.body)
-    // os.write(os.pwd / "raw-updated.json", ujson.write(json))
-    }
+        try {
+            val content : String = os.read(os.pwd / "Ozymandias.txt");
+            println(content)
+            if (DUMP_ENABLE){
+                println("############################");
+                println("### Running Dump Process ###");
+                println("############################");
+                executionMap.keys.foreach(key=>{
+                    val response : Response[String] = objCouchDB.getAllDocuments(key);
+                    objfiles.writeJsonFile(executionMap(key), response.body);
+                });
+            }//If Closure
+            if (BULK_ENABLE){
+                println("#############################");
+                println("## Running Restore Process ##");
+                println("#############################");
+                executionMap.keys.foreach(key=>{
+                    val response : Response[String] = objCouchDB.bulkDocuments(key);
+                    println(response.code)
+                    println(response.body)
+                });
+            }//If Closure
+        } catch {
+            case ex: Exception => {println("Exception Occurred [main]: "+ex.printStackTrace());}
+        }// catch closure
+    }// main closure
 } // object main closure

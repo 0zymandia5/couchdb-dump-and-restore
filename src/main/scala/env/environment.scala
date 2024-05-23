@@ -5,19 +5,15 @@ import io.github.cdimascio.dotenv.Dotenv
 trait environment{
 
   val dotenv = Dotenv.configure().directory(System.getProperty("user.dir")).load();
-  //DBs Variables
-  var HOSTDB_CLOUDANT : String = null;
-  var USER_CLOUDANT : String = null;
-  var PASS_CLOUDANT : String = null;
-  var DBNAME_CLOUDANT : String = null;
-  var MASTER : String = null;
+  // Cloudant/Couch DB Variables
+  val HOSTDB_CLOUDANT : String = dotenv.get("HOSTDB_CLOUDANT");
+  val USER_CLOUDANT : String = dotenv.get("USER_CLOUDANT");;
+  val PASS_CLOUDANT : String = dotenv.get("PASS_CLOUDANT");
+  val DBNAME_CLOUDANT : String = dotenv.get("DBNAME_CLOUDANT");
+  val MASTER : String = "local";
+  val DBNAME_RESTORE_CLOUDANT : String = dotenv.get("DBNAME_RESTORE_CLOUDANT");
+  // Execution Variables
+  val DUMP_ENABLE : Boolean = dotenv.get("DUMPS").toBoolean
+  val BULK_ENABLE : Boolean = dotenv.get("RESTORE").toBoolean
 
-
-  def envLoadCloudant() : Unit =  {
-    this.HOSTDB_CLOUDANT = dotenv.get("HOSTDB_CLOUDANT");
-    this.USER_CLOUDANT = dotenv.get("USER_CLOUDANT");
-    this.PASS_CLOUDANT = dotenv.get("PASS_CLOUDANT");
-    this.DBNAME_CLOUDANT = dotenv.get("DBNAME_CLOUDANT");
-    this.MASTER = "local"
-  }
-} 
+}//Closure trait environment 
