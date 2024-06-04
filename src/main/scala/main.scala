@@ -32,9 +32,7 @@ object main extends environment {
                 println("## Running Restore Process ##");
                 println("#############################");
                 executionMap.keys.foreach(key=>{
-                    val response : Response[String] = objCouchDB.bulkDocuments(key);
-                    println(response.code)
-                    println(response.body)
+                    objCouchDB.bulkDocuments(key);
                 });
             }//If Closure
         } catch {
