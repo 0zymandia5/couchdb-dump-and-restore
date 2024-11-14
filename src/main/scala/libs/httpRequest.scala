@@ -1,9 +1,12 @@
 package libs
-
-import sttp.client4.quick._
+import sttp.client4.BackendOptions
+import sttp.client4.DefaultSyncBackend 
 import sttp.client4.Response
+import sttp.client4.quick._
 import sttp.model.StatusCode
+import scala.concurrent.duration._
 import sttp.model.Uri
+
 
 /**
   * <h1>class httpRequest</h1>
@@ -21,12 +24,16 @@ class httpRequest {
       * 
       * @return Response[String]
     **/
+    val timeOutRead : Duration = 5.minutes;
+    val timeOutConn : FiniteDuration = 5.minutes;
     def getRequestWithAuth(url: String, username : String, pass : String): Response[String]  = {
-        try {
+      try{
+            val backend = DefaultSyncBackend(options = BackendOptions.connectionTimeout(this.timeOutConn));
             val response: Response[String] = quickRequest
             .get(uri"$url")
             .auth.basic(user = username, password = pass)
-            .send()
+            .readTimeout(this.timeOutRead)
+            .send(backend);
             return response;
         } catch {
             case e : Exception => { println("Exception Occurred [httpRequest][getRequestWithAuth]: "+e.printStackTrace()); 
