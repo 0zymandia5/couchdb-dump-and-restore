@@ -7,7 +7,7 @@ package const
 object constants {
 
     val request4CouchDB : Map[String, String] = Map(
-        "getAllDocs" ->  "_all_docs?include_docs=true",
+        "getAllDocs" ->  "_all_docs?include_docs=true&attachments=true",
         "getAllDesingDocs" -> "_design_docs?include_docs=true"
     );
     val dumpExecution : Map[String, String] = Map(

@@ -15,6 +15,7 @@ class couchdb extends environment {
 
     val objHttp : httpRequest= new httpRequest();
     val objFiles : files = new files();
+    // for Attachments docs put a rate of 25 for docsLimit4Bulk
     val docsLimit4Bulk : Int = 1000;
 
     /**
@@ -114,7 +115,8 @@ class couchdb extends environment {
         val arraysToBulk : ArrayBuffer [String] = ArrayBuffer.empty;
         val auxArray : ArrayBuffer[ujson.Value] = ArrayBuffer.empty;
         arrayOfDocs.foreach(doc => {
-          if(auxArray.length == this.docsLimit4Bulk){
+          if((auxArray.length + 1) == this.docsLimit4Bulk || (auxArray.length + 1) == arrayOfDocs.length){
+            auxArray.append(doc);
             arraysToBulk.append("""{"docs":"""+ujson.write(auxArray.toList,-1,true)+"}")
             auxArray.clear();
           }//if closure

@@ -54,12 +54,14 @@ class httpRequest {
     **/
     def postRequestWithAuth(url: String, username : String, pass : String, json2String : String): Response[String]  = {
         try {
+          val backend = DefaultSyncBackend(options = BackendOptions.connectionTimeout(this.timeOutConn));
           val response: Response[String] = quickRequest
             .post(uri"$url")
             .auth.basic(user = username, password = pass)
             .body(json2String)
             .contentType("application/json")
-            .send()
+            .readTimeout(this.timeOutRead)
+            .send(backend)
             return response;
         } catch {
             case e : Exception => { println("Exception Occurred [httpRequest][postRequestWithAuth]: "+e.printStackTrace()); 
